@@ -1,0 +1,2 @@
+regular-crossword-resolver
+==========================

@@ -6,10 +6,6 @@ object RegexGen {
   case class Chars(chars: Set[Char]) extends Constraint
   case class Ref(index: Int) extends Constraint
   
-  def main(args: Array[String]) {
-    compute(RegexParser.parse(".*(.)(.)(.)(.)\\4\\3\\2\\1.*"), 12)
-  }
-  
   class Groups(stack: List[(Int, Int)] = Nil, next: Int = 1, val matched: Map[Int, (Int, Int)] = Map()) {
     
     def startGroup(start: Int) = new Groups((next, start) :: stack, next + 1, matched)

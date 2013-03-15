@@ -6,9 +6,9 @@ object RegexCrosswordResolver {
   
   class Crossword(
       val size: Int,
-      val xConstraints: Seq[Set[Seq[Constraint]]], 
-      val yConstraints: Seq[Set[Seq[Constraint]]], 
-      val zConstraints: Seq[Set[Seq[Constraint]]],  
+      val xConstraints: Seq[List[Seq[Constraint]]],
+      val yConstraints: Seq[List[Seq[Constraint]]],
+      val zConstraints: Seq[List[Seq[Constraint]]],
       val dirties: Set[(Int, Int)],
       val toResolve: Map[(Int, Int), Set[Char]],
       val resolved: Map[(Int, Int), Char]
@@ -78,14 +78,14 @@ object RegexCrosswordResolver {
       }
     }
     
-    def allowedValues(constraints: Seq[Set[Seq[Constraint]]], x: Int, y: Int) = {
+    def allowedValues(constraints: Seq[List[Seq[Constraint]]], x: Int, y: Int) = {
       val i = index(x, y)
       constraints(x).foldLeft(Set[Char]()) { 
         (acc, solution) => acc ++ getValues(solution, i)
       }
     }
     
-    def updateAllowedValues(constraints: Seq[Set[Seq[Constraint]]], x: Int, y: Int, values: Set[Char]) = {
+    def updateAllowedValues(constraints: Seq[List[Seq[Constraint]]], x: Int, y: Int, values: Set[Char]) = {
       val i = index(x, y)
       val newConstraints = constraints(x).flatMap { 
         solution => updateValues(solution, i, values)
@@ -111,8 +111,8 @@ object RegexCrosswordResolver {
     }
     
     def newDirtyCases(
-        oldConstraints: Seq[Set[Seq[Constraint]]], 
-        newConstraints: Seq[Set[Seq[Constraint]]],
+        oldConstraints: Seq[List[Seq[Constraint]]],
+        newConstraints: Seq[List[Seq[Constraint]]],
         x: Int, y: Int) = {
       if (newConstraints(x) != oldConstraints(x)) {
         indexes(x, radius).filter(_ != y).map((x, _))
@@ -156,7 +156,7 @@ object RegexCrosswordResolver {
   def computeConstraints(regexs: Seq[String]) = {
     val radius = regexs.length / 2
     regexs.zipWithIndex.map {
-      case (regex, i) => computeRegex(regex, regexs.length - Math.abs(radius - i))
+      case (regex, i) => computeRegex(regex, regexs.length - math.abs(radius - i)).toList
     }
   }
   
